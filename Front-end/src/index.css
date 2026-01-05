@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #fcfaf2; /* Beige muy clarito de fondo */
+  color: #000000;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #fcfaf2;
+}
+
+@theme {
+  --color-beige-light: #fcfaf2;
+  --color-beige-medium: #f5f0e1;
+  --color-primary: #000000;
+}

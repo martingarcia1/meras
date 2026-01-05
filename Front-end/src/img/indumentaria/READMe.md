@@ -1,0 +1,2 @@
+estás es para la parte de indumentaria/ remeras/ personaliza tu remera 
+a modo de ejemplo la de recibidas, despedida de soltera, cumple, etc. estás van en donde estará el boton tb para crear tu remera 
