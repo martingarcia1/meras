@@ -40,6 +40,7 @@ import { Shipment } from './shipping/entities/shipment.entity';
         Shipment,
       ],
       synchronize: process.env.NODE_ENV !== 'production', // Solo en desarrollo
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // Desactivar SSL en desarrollo para evitar errores de certificado
       logging: process.env.NODE_ENV === 'development',
     }),
     AuthModule,
