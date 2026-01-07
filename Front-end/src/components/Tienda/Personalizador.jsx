@@ -1,14 +1,58 @@
 import { useState } from 'react';
 import { RotateCcw, Eye, Maximize2, Palette, Shirt } from 'lucide-react';
 import EditorDiseño from './EditorDiseño';
+import PreviewFinal from './PreviewFinal';
+import Pedido from './Pedido';
+
+// Componente de barra de progreso reutilizable
+const ProgressBar = ({ step }) => (
+  <div className="border-b border-black/10 bg-white px-6 py-4">
+    <div className="flex items-center justify-center gap-8 max-w-4xl mx-auto">
+      {[
+        { num: 1, label: 'Elegir Remera' },
+        { num: 2, label: 'Diseñar' },
+        { num: 3, label: 'Preview' },
+        { num: 4, label: 'Pedido' },
+      ].map((s) => (
+        <div key={s.num} className="flex items-center gap-4">
+          <div
+            className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-black text-sm transition-all ${
+              step === s.num
+                ? 'bg-black text-white border-black'
+                : step > s.num
+                ? 'bg-black/20 text-black border-black/30'
+                : 'bg-white text-black/40 border-black/20'
+            }`}
+          >
+            {s.num}
+          </div>
+          <span
+            className={`text-sm font-bold uppercase tracking-wider ${
+              step === s.num ? 'text-black' : 'text-black/40'
+            }`}
+          >
+            {s.label}
+          </span>
+          {s.num < 4 && (
+            <div
+              className={`w-12 h-0.5 ${
+                step > s.num ? 'bg-black' : 'bg-black/20'
+              }`}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const Personalizador = () => {
   const [step, setStep] = useState(1); // 1: Elegir Remera, 2: Diseñar, 3: Preview, 4: Pedido
   const [selectedModel, setSelectedModel] = useState('Clásica');
   const [selectedColor, setSelectedColor] = useState('Blanco');
   const [selectedSize, setSelectedSize] = useState('M');
-  const [viewSide, setViewSide] = useState('Frente'); // Frente o Espalda
-  const [, setDesignData] = useState(null); // Se usará cuando implementemos el guardado al backend
+  const [viewSide, setViewSide] = useState('Frente');
+  const [designData, setDesignData] = useState(null);
   const [designElements, setDesignElements] = useState(0);
 
   const models = [
@@ -44,30 +88,84 @@ const Personalizador = () => {
 
   const selectedModelData = models.find((m) => m.name === selectedModel);
 
-  // Si estamos en el paso 2 (Diseñar), mostrar el editor
-  if (step === 2) {
-    return (
-      <EditorDiseño
-        colorBase={selectedColor}
-        selectedModel={selectedModel}
-        selectedSize={selectedSize}
-        onSave={(data) => {
-          setDesignData(data);
-          setDesignElements(data.capas?.length || 0);
-          setStep(3); // Ir a Preview
-        }}
-        onBack={() => setStep(1)}
-        onElementsChange={(count) => setDesignElements(count)}
-      />
-    );
-  }
-
   // Función para obtener el color hex del nombre
   const getColorHex = (colorName) => {
     const color = colors.find((c) => c.name === colorName);
     return color?.hex || '#FFFFFF';
   };
 
+  // Paso 2: Diseñar
+  if (step === 2) {
+    return (
+      <div className="min-h-screen bg-white text-black">
+        <div className="border-b border-black/10 bg-beige-light/30 py-8 px-6">
+          <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">Ropa Personalizada</h1>
+          <p className="text-lg text-black/60 italic">Diseña tu remera perfecta</p>
+        </div>
+        <ProgressBar step={step} />
+        <EditorDiseño
+          colorBase={selectedColor}
+          selectedModel={selectedModel}
+          selectedSize={selectedSize}
+          onSave={(data) => {
+            setDesignData(data);
+            setDesignElements(data.capas?.length || 0);
+            setStep(3);
+          }}
+          onBack={() => setStep(1)}
+          onElementsChange={(count) => setDesignElements(count)}
+        />
+      </div>
+    );
+  }
+
+  // Paso 3: Preview Final
+  if (step === 3) {
+    return (
+      <div className="min-h-screen bg-white text-black">
+        <div className="border-b border-black/10 bg-beige-light/30 py-8 px-6">
+          <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">Ropa Personalizada</h1>
+          <p className="text-lg text-black/60 italic">Diseña tu remera perfecta</p>
+        </div>
+        <ProgressBar step={step} />
+        <PreviewFinal
+          selectedModel={selectedModel}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
+          designData={designData}
+          designElements={designElements}
+          onEdit={() => setStep(2)}
+          onContinue={() => setStep(4)}
+          getColorHex={getColorHex}
+        />
+      </div>
+    );
+  }
+
+  // Paso 4: Pedido
+  if (step === 4) {
+    return (
+      <div className="min-h-screen bg-white text-black">
+        <div className="border-b border-black/10 bg-beige-light/30 py-8 px-6">
+          <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">Ropa Personalizada</h1>
+          <p className="text-lg text-black/60 italic">Diseña tu remera perfecta</p>
+        </div>
+        <ProgressBar step={step} />
+        <Pedido
+          selectedModel={selectedModel}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
+          designData={designData}
+          designElements={designElements}
+          modelData={selectedModelData}
+          onBack={() => setStep(3)}
+          getColorHex={getColorHex}
+        />
+      </div>
+    );
+  }
+
+  // Paso 1: Elegir Remera
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Header con título */}
@@ -76,45 +174,7 @@ const Personalizador = () => {
         <p className="text-lg text-black/60 italic">Diseña tu remera perfecta</p>
       </div>
 
-      {/* Barra de progreso */}
-      <div className="border-b border-black/10 bg-white px-6 py-4">
-        <div className="flex items-center justify-center gap-8 max-w-4xl mx-auto">
-          {[
-            { num: 1, label: 'Elegir Remera' },
-            { num: 2, label: 'Diseñar' },
-            { num: 3, label: 'Preview' },
-            { num: 4, label: 'Pedido' },
-          ].map((s) => (
-            <div key={s.num} className="flex items-center gap-4">
-              <div
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-black text-sm transition-all ${
-                  step === s.num
-                    ? 'bg-black text-white border-black'
-                    : step > s.num
-                    ? 'bg-black/20 text-black border-black/30'
-                    : 'bg-white text-black/40 border-black/20'
-                }`}
-              >
-                {s.num}
-              </div>
-              <span
-                className={`text-sm font-bold uppercase tracking-wider ${
-                  step === s.num ? 'text-black' : 'text-black/40'
-                }`}
-              >
-                {s.label}
-              </span>
-              {s.num < 4 && (
-                <div
-                  className={`w-12 h-0.5 ${
-                    step > s.num ? 'bg-black' : 'bg-black/20'
-                  }`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <ProgressBar />
 
       {/* Contenido principal */}
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-200px)]">
@@ -235,7 +295,7 @@ const Personalizador = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setViewSide(viewSide === 'Frente' ? 'Espalda' : 'Frente')}
-                  className="p-2 border border-black/20 hover:border-black transition-all"
+                  className="p-2 border border-black/20 hover:border-black transition-all text-xs"
                   title="Ver Atrás"
                 >
                   <RotateCcw size={18} />
@@ -259,50 +319,64 @@ const Personalizador = () => {
           {/* Vista de la remera */}
           <div className="flex items-center justify-center min-h-[500px] bg-beige-light/30 border-2 border-black/10">
             <div className="relative">
-              {/* Remera plana */}
-              <div
-                className="w-80 h-96 relative"
-                style={{
-                  backgroundColor: getColorHex(selectedColor),
-                  clipPath: selectedModel === 'Oversized'
-                    ? 'polygon(15% 0%, 85% 0%, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0% 85%, 0% 15%)'
-                    : selectedModel === 'Entallada'
-                    ? 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)'
-                    : 'polygon(18% 0%, 82% 0%, 100% 18%, 100% 82%, 82% 100%, 18% 100%, 0% 82%, 0% 18%)',
-                }}
+              {/* Remera plana mejorada con SVG */}
+              <svg
+                width="320"
+                height="400"
+                viewBox="0 0 320 400"
+                className="drop-shadow-lg"
               >
+                {/* Cuerpo de la remera */}
+                <path
+                  d={selectedModel === 'Oversized'
+                    ? 'M 50 40 L 270 40 L 300 80 L 300 360 L 270 380 L 50 380 L 20 360 L 20 80 Z'
+                    : selectedModel === 'Entallada'
+                    ? 'M 60 30 L 260 30 L 290 70 L 290 350 L 260 370 L 60 370 L 30 350 L 30 70 Z'
+                    : 'M 55 35 L 265 35 L 295 75 L 295 355 L 265 375 L 55 375 L 25 355 L 25 75 Z'}
+                  fill={getColorHex(selectedColor)}
+                  stroke="#000000"
+                  strokeWidth="2"
+                />
                 {/* Manga izquierda */}
-                <div
-                  className="absolute left-0 top-[15%] w-16 h-32"
-                  style={{
-                    backgroundColor: getColorHex(selectedColor),
-                    clipPath: 'polygon(0% 0%, 100% 0%, 80% 100%, 0% 100%)',
-                  }}
+                <path
+                  d="M 20 80 Q 10 100 0 120 L 0 200 Q 10 220 20 240 L 20 80 Z"
+                  fill={getColorHex(selectedColor)}
+                  stroke="#000000"
+                  strokeWidth="2"
                 />
                 {/* Manga derecha */}
-                <div
-                  className="absolute right-0 top-[15%] w-16 h-32"
-                  style={{
-                    backgroundColor: getColorHex(selectedColor),
-                    clipPath: 'polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%)',
-                  }}
+                <path
+                  d="M 300 80 Q 310 100 320 120 L 320 200 Q 310 220 300 240 L 300 80 Z"
+                  fill={getColorHex(selectedColor)}
+                  stroke="#000000"
+                  strokeWidth="2"
                 />
-                {/* Cuello */}
-                <div
-                  className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-16 rounded-b-full border-2 border-black/20"
-                  style={{
-                    backgroundColor: selectedColor === 'Negro' ? '#1a1a1a' : '#f5f5f5',
-                  }}
+                {/* Cuello redondo */}
+                <ellipse
+                  cx="160"
+                  cy="40"
+                  rx="35"
+                  ry="20"
+                  fill={selectedColor === 'Negro' ? '#1a1a1a' : '#f5f5f5'}
+                  stroke="#000000"
+                  strokeWidth="1.5"
+                  opacity="0.3"
                 />
                 {/* Zona de diseño (placeholder) */}
                 {designElements > 0 && (
-                  <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 border-2 border-dashed border-black/20 flex items-center justify-center">
-                    <span className="text-xs font-bold text-black/40 uppercase">
-                      {designElements} elemento{designElements > 1 ? 's' : ''}
-                    </span>
-                  </div>
+                  <rect
+                    x="110"
+                    y="180"
+                    width="100"
+                    height="100"
+                    fill="none"
+                    stroke="#000000"
+                    strokeWidth="1"
+                    strokeDasharray="5,5"
+                    opacity="0.3"
+                  />
                 )}
-              </div>
+              </svg>
               <p className="text-center mt-4 text-sm text-black/40 font-bold uppercase tracking-wider">
                 Vista: {viewSide}
               </p>

@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { Type, Image as ImageIcon, Trash2, Save, Move, Layers, RotateCcw, Eye, Maximize2 } from 'lucide-react';
+import { Type, Image as ImageIcon, Trash2, Save, Move, Layers, RotateCcw, Eye, Maximize2, Upload, Shapes, Image as GalleryIcon } from 'lucide-react';
+
+// Galería de diseños predefinidos
+const predefinedDesigns = [
+  { id: 1, name: 'Cine Clásico', url: '/src/img/Cine/IMG_1406.JPG', category: 'Cine' },
+  { id: 2, name: 'Cine Vintage', url: '/src/img/Cine/IMG_7284.JPG', category: 'Cine' },
+  { id: 3, name: 'Cine Moderno', url: '/src/img/Cine/IMG_7285.JPG', category: 'Cine' },
+  { id: 4, name: 'Música Rock', url: '/src/img/music/IMG_7295.JPG', category: 'Música' },
+  { id: 5, name: 'Música Clásica', url: '/src/img/music/IMG_7296.JPG', category: 'Música' },
+  { id: 6, name: 'Música Vintage', url: '/src/img/music/IMG_7301.JPG', category: 'Música' },
+  { id: 7, name: 'Cine Especial', url: '/src/img/Cine/015F3118-CC9D-4078-9C9F-7F08791E38D2.JPEG', category: 'Cine' },
+  { id: 8, name: 'Música Alternativa', url: '/src/img/music/IMG_7318.JPG', category: 'Música' },
+];
 
 const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack, onElementsChange }) => {
   const canvasRef = useRef(null);
@@ -14,6 +26,7 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
   const [fabricLib, setFabricLib] = useState(null);
   const [elementCount, setElementCount] = useState(0);
   const [viewSide, setViewSide] = useState('Frente');
+  const [showGallery, setShowGallery] = useState(false);
 
   // Cargar Fabric.js
   useEffect(() => {
@@ -204,6 +217,25 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
     reader.readAsDataURL(file);
   };
 
+  // Agregar diseño predefinido desde la galería
+  const addPredefinedDesign = (designUrl) => {
+    if (!canvasInstanceRef.current || !fabricLib) return;
+
+    fabricLib.Image.fromURL(designUrl, (img) => {
+      img.scaleToWidth(200);
+      img.set({
+        left: 250,
+        top: 300,
+      });
+      canvasInstanceRef.current.add(img);
+      canvasInstanceRef.current.setActiveObject(img);
+      setShowGallery(false);
+      setSelectedTool('select');
+    }, {
+      crossOrigin: 'anonymous'
+    });
+  };
+
   // Eliminar objeto seleccionado
   const deleteSelected = () => {
     if (!canvasInstanceRef.current) return;
@@ -273,55 +305,9 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      {/* Header */}
-      <div className="border-b border-black/10 bg-beige-light/30 py-8 px-6">
-        <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">Ropa Personalizada</h1>
-        <p className="text-lg text-black/60 italic">Diseña tu remera perfecta</p>
-      </div>
-
-      {/* Barra de progreso */}
-      <div className="border-b border-black/10 bg-white px-6 py-4">
-        <div className="flex items-center justify-center gap-8 max-w-4xl mx-auto">
-          {[
-            { num: 1, label: 'Elegir Remera' },
-            { num: 2, label: 'Diseñar' },
-            { num: 3, label: 'Preview' },
-            { num: 4, label: 'Pedido' },
-          ].map((s) => (
-            <div key={s.num} className="flex items-center gap-4">
-              <div
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-black text-sm transition-all ${
-                  s.num === 2
-                    ? 'bg-black text-white border-black'
-                    : s.num < 2
-                    ? 'bg-black/20 text-black border-black/30'
-                    : 'bg-white text-black/40 border-black/20'
-                }`}
-              >
-                {s.num}
-              </div>
-              <span
-                className={`text-sm font-bold uppercase tracking-wider ${
-                  s.num === 2 ? 'text-black' : 'text-black/40'
-                }`}
-              >
-                {s.label}
-              </span>
-              {s.num < 4 && (
-                <div
-                  className={`w-12 h-0.5 ${
-                    s.num < 2 ? 'bg-black' : 'bg-black/20'
-                  }`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
+    <div className="bg-white text-black">
       {/* Contenido principal */}
-      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:flex-row">
         {/* Panel izquierdo - Herramientas */}
         <div className="lg:w-1/3 border-r border-black/10 bg-beige-light/20 p-6 overflow-y-auto">
           <div className="mb-6">
@@ -340,15 +326,27 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
             <h3 className="text-sm font-black uppercase tracking-wider mb-4">Herramientas</h3>
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => setSelectedTool('select')}
+                onClick={() => {
+                  setShowGallery(true);
+                  setSelectedTool('gallery');
+                }}
                 className={`p-4 border-2 font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 ${
-                  selectedTool === 'select'
+                  selectedTool === 'gallery'
                     ? 'bg-black text-white border-black'
                     : 'bg-white text-black border-black/20 hover:border-black'
                 }`}
               >
-                <Move size={18} /> Seleccionar
+                <GalleryIcon size={18} /> Galería
               </button>
+              <label className="p-4 border-2 font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 bg-white text-black border-black/20 hover:border-black cursor-pointer">
+                <Upload size={18} /> Subir
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </label>
               <button
                 onClick={() => setSelectedTool('text')}
                 className={`p-4 border-2 font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 ${
@@ -359,17 +357,51 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
               >
                 <Type size={18} /> Texto
               </button>
-              <label className="p-4 border-2 font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 bg-white text-black border-black/20 hover:border-black cursor-pointer">
-                <ImageIcon size={18} /> Imagen
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
+              <button
+                onClick={() => setSelectedTool('select')}
+                className={`p-4 border-2 font-black text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2 ${
+                  selectedTool === 'select'
+                    ? 'bg-black text-white border-black'
+                    : 'bg-white text-black border-black/20 hover:border-black'
+                }`}
+              >
+                <Move size={18} /> Seleccionar
+              </button>
             </div>
           </div>
+
+          {/* Galería de Diseños Predefinidos */}
+          {showGallery && (
+            <div className="mb-6 p-4 bg-white border-2 border-black">
+              <h3 className="font-black text-xs tracking-widest uppercase mb-4">Diseños Predefinidos</h3>
+              <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                {predefinedDesigns.map((design) => (
+                  <button
+                    key={design.id}
+                    onClick={() => addPredefinedDesign(design.url)}
+                    className="aspect-square border-2 border-black/20 hover:border-black transition-all overflow-hidden bg-white group"
+                    title={design.name}
+                  >
+                    <img
+                      src={design.url}
+                      alt={design.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center text-xs font-bold text-black/40">${design.name}</div>`;
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowGallery(false)}
+                className="w-full mt-4 p-2 border-2 border-black/20 hover:border-black transition-all text-xs font-black uppercase"
+              >
+                Cerrar Galería
+              </button>
+            </div>
+          )}
 
           {/* Editor de texto */}
           {selectedTool === 'text' && (
