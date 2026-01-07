@@ -1,0 +1,7 @@
+# Vercel ignore - no desplegar estos archivos
+Back-end/
+node_modules/
+.git/
+*.md
+!README.md
+
