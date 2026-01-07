@@ -44,7 +44,7 @@ const Home = () => {
         {/* Botones del Boceto */}
         <div className="flex flex-col gap-4 w-full max-w-xs">
           <Link 
-            to="/catalogo/remeras-diseno" 
+            to="/catalogo" 
             className="w-full border-2 border-black py-4 text-xl font-bold tracking-widest bg-black text-beige-light hover:bg-transparent hover:text-black transition-all uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] text-center"
           >
             Ver Catálogo
@@ -144,7 +144,7 @@ const Home = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <a 
-                  href="https://wa.me/tu_numero" 
+                  href="https://wa.me/+543815987621" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-4 bg-green-600 text-white px-10 py-5 text-xl font-bold hover:bg-green-700 transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] w-full sm:w-auto"
@@ -152,7 +152,7 @@ const Home = () => {
                   <MessageCircle size={28} /> WHATSAPP
                 </a>
                 <a 
-                  href="mailto:contacto@meras.com" 
+                  href="mailto:merasofic@gmail.com" 
                   className="flex items-center justify-center gap-4 border-2 border-black px-10 py-5 text-xl font-bold hover:bg-black hover:text-white transition-all w-full sm:w-auto uppercase"
                 >
                   Enviar Mail

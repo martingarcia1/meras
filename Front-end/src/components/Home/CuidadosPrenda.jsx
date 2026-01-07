@@ -68,7 +68,7 @@ const CuidadosPrenda = () => {
         <div className="mt-24 p-12 bg-black text-beige-light text-center">
           <h2 className="text-3xl font-black tracking-tighter uppercase italic mb-4">¿Tenés dudas?</h2>
           <p className="text-sm font-light italic mb-8 opacity-60 uppercase tracking-widest">Si no estás segura de cómo lavar una prenda especial, consultanos.</p>
-          <a href="https://wa.me/tu_numero" className="inline-block border-2 border-beige-light px-8 py-4 font-black tracking-widest uppercase hover:bg-beige-light hover:text-black transition-all">Consultar por WhatsApp</a>
+          <a href="https://wa.me/+543815987621" className="inline-block border-2 border-beige-light px-8 py-4 font-black tracking-widest uppercase hover:bg-beige-light hover:text-black transition-all">Consultar por WhatsApp</a>
         </div>
       </div>
     </div>

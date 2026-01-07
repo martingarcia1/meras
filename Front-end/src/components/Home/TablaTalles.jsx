@@ -49,7 +49,7 @@ const TablaTalles = () => {
               <h3 className="text-2xl font-black uppercase tracking-tighter italic mb-2 leading-none">¿No estás seguro?</h3>
               <p className="text-xs font-light italic tracking-widest opacity-60">Te asesoramos personalmente para elegir tu talle.</p>
            </div>
-           <a href="https://wa.me/tu_numero" className="bg-white text-black px-10 py-4 font-black tracking-widest uppercase hover:bg-beige-medium transition-colors whitespace-nowrap">Consultar Talle</a>
+           <a href="https://wa.me/+543815987621" className="bg-white text-black px-10 py-4 font-black tracking-widest uppercase hover:bg-beige-medium transition-colors whitespace-nowrap">Consultar Talle</a>
         </div>
       </div>
     </div>

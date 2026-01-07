@@ -1,0 +1,225 @@
+{
+  "categorias": [
+    {
+      "nombre": "Remeras Básicas",
+      "slug": "remeras-basicas",
+      "descripcion": "Remeras básicas de algodón premium",
+      "orden": 1
+    },
+    {
+      "nombre": "Catálogo Diseño",
+      "slug": "catalogo-diseno",
+      "descripcion": "Remeras con diseños exclusivos: Cine, Música, Anime, Series",
+      "orden": 2
+    },
+    {
+      "nombre": "Accesorios",
+      "slug": "accesorios",
+      "descripcion": "Gorras y pilusos",
+      "orden": 3
+    },
+    {
+      "nombre": "Sublimación",
+      "slug": "sublimacion",
+      "descripcion": "Telas sublimadas y banderas",
+      "orden": 4
+    }
+  ],
+  "productos": [
+    {
+      "nombre": "Remera Básica Blanca",
+      "slug": "remera-basica-blanca",
+      "descripcion": "Remera básica de algodón 100% premium. Disponible en todos los talles hasta 6XL.",
+      "categoriaId": 1,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/indumentaria/IMG_0605.jpg",
+      "imagenesSecundarias": [
+        "/src/img/indumentaria/IMG_2129.jpg",
+        "/src/img/indumentaria/IMG_3954.jpg"
+      ],
+      "precioBase": 15000
+    },
+    {
+      "nombre": "Remera Básica Negra",
+      "slug": "remera-basica-negra",
+      "descripcion": "Remera básica negra de algodón premium. Ideal para cualquier ocasión.",
+      "categoriaId": 1,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/indumentaria/IMG_7129_Original.jpg",
+      "precioBase": 15000
+    },
+    {
+      "nombre": "Remera Cine - Clásico del Séptimo Arte",
+      "slug": "remera-cine-clasico-septimo-arte",
+      "descripcion": "Remera con diseño exclusivo de cine. Para los amantes del séptimo arte.",
+      "categoriaId": 2,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/Cine/IMG_1406.JPG",
+      "imagenesSecundarias": [
+        "/src/img/Cine/IMG_1413.PNG",
+        "/src/img/Cine/IMG_1417.PNG"
+      ],
+      "precioBase": 18000
+    },
+    {
+      "nombre": "Remera Cine - Película Favorita",
+      "slug": "remera-cine-pelicula-favorita",
+      "descripcion": "Diseño exclusivo de películas icónicas. Disponible en varios estilos.",
+      "categoriaId": 2,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/Cine/IMG_7284.JPG",
+      "imagenesSecundarias": [
+        "/src/img/Cine/IMG_7285.JPG",
+        "/src/img/Cine/IMG_7286.JPG"
+      ],
+      "precioBase": 18000
+    },
+    {
+      "nombre": "Remera Música Rock",
+      "slug": "remera-musica-rock",
+      "descripcion": "Para los amantes del rock. Diseños exclusivos de bandas y géneros musicales.",
+      "categoriaId": 2,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/music/IMG_7295.JPG",
+      "imagenesSecundarias": [
+        "/src/img/music/IMG_7296.JPG",
+        "/src/img/music/IMG_7297.JPG"
+      ],
+      "precioBase": 18000
+    },
+    {
+      "nombre": "Remera Música - Estilo Vintage",
+      "slug": "remera-musica-estilo-vintage",
+      "descripcion": "Diseños retro de música. Estilo único y exclusivo.",
+      "categoriaId": 2,
+      "tipoPrenda": "remera",
+      "imagenPrincipalUrl": "/src/img/music/IMG_7301.JPG",
+      "imagenesSecundarias": [
+        "/src/img/music/IMG_7302.JPG",
+        "/src/img/music/IMG_7303.JPG"
+      ],
+      "precioBase": 19000
+    },
+    {
+      "nombre": "Piluso Clásico",
+      "slug": "piluso-clasico",
+      "descripcion": "Piluso de alta calidad. Perfecto para el verano.",
+      "categoriaId": 3,
+      "tipoPrenda": "otro",
+      "imagenPrincipalUrl": "/src/img/pilusos/IMG_2808.jpg",
+      "imagenesSecundarias": [
+        "/src/img/pilusos/IMG_4479.jpg"
+      ],
+      "precioBase": 12000
+    },
+    {
+      "nombre": "Piluso Estampado",
+      "slug": "piluso-estampado",
+      "descripcion": "Piluso con estampados exclusivos. Varios diseños disponibles.",
+      "categoriaId": 3,
+      "tipoPrenda": "otro",
+      "imagenPrincipalUrl": "/src/img/pilusos/20230419_160121_Original.jpg",
+      "precioBase": 13000
+    },
+    {
+      "nombre": "Tela Sublimada - Diseño Exclusivo",
+      "slug": "tela-sublimada-diseno-exclusivo",
+      "descripcion": "Tela de alta calidad con sublimación personalizada. Ideal para proyectos creativos.",
+      "categoriaId": 4,
+      "tipoPrenda": "otro",
+      "imagenPrincipalUrl": "/src/img/lisas y fondos/IMG_1109.JPG",
+      "imagenesSecundarias": [
+        "/src/img/lisas y fondos/IMG_1110.JPG",
+        "/src/img/lisas y fondos/IMG_1164.JPG"
+      ],
+      "precioBase": 25000
+    }
+  ],
+  "variantes_ejemplo": [
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "S",
+      "sku": "REM-BAS-BLAN-S",
+      "stock": 50
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "M",
+      "sku": "REM-BAS-BLAN-M",
+      "stock": 50
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "L",
+      "sku": "REM-BAS-BLAN-L",
+      "stock": 50
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "XL",
+      "sku": "REM-BAS-BLAN-XL",
+      "stock": 30
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "XXL",
+      "sku": "REM-BAS-BLAN-XXL",
+      "stock": 20
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "3XL",
+      "sku": "REM-BAS-BLAN-3XL",
+      "stock": 15
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "4XL",
+      "sku": "REM-BAS-BLAN-4XL",
+      "stock": 10
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "5XL",
+      "sku": "REM-BAS-BLAN-5XL",
+      "stock": 5
+    },
+    {
+      "productId": 1,
+      "color": "Blanco",
+      "talle": "6XL",
+      "sku": "REM-BAS-BLAN-6XL",
+      "stock": 3
+    },
+    {
+      "productId": 1,
+      "color": "Negro",
+      "talle": "M",
+      "sku": "REM-BAS-NEG-M",
+      "stock": 40
+    },
+    {
+      "productId": 1,
+      "color": "Negro",
+      "talle": "L",
+      "sku": "REM-BAS-NEG-L",
+      "stock": 40
+    },
+    {
+      "productId": 1,
+      "color": "Gris",
+      "talle": "M",
+      "sku": "REM-BAS-GRIS-M",
+      "stock": 35
+    }
+  ]
+}
+

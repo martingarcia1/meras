@@ -50,6 +50,7 @@ const NavBar = () => {
               </div>
             </div>
 
+            <Link to="/catalogo" className="text-black/60 hover:text-black transition-colors font-bold text-xs tracking-widest uppercase">Catálogo</Link>
             <Link to="/quienes-somos" className="text-black/60 hover:text-black transition-colors font-bold text-xs tracking-widest uppercase">Nosotros</Link>
           </div>
 
