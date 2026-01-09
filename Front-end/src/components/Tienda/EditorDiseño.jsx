@@ -51,6 +51,70 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
     return colorMap[colorName] || '#FFFFFF';
   };
 
+  // Función para crear SVG de remera como imagen
+  const createRemeraSVGImage = (model, color) => {
+    const svgContent = `
+      <svg width="320" height="400" viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="${model === 'Oversized'
+            ? 'M 50 40 L 270 40 L 300 80 L 300 360 L 270 380 L 50 380 L 20 360 L 20 80 Z'
+            : model === 'Entallada'
+            ? 'M 60 30 L 260 30 L 290 70 L 290 350 L 260 370 L 60 370 L 30 350 L 30 70 Z'
+            : 'M 55 35 L 265 35 L 295 75 L 295 355 L 265 375 L 55 375 L 25 355 L 25 75 Z'}"
+          fill="${getColorHex(color)}"
+          stroke="#000000"
+          stroke-width="2"
+        />
+        <path
+          d="M 20 80 Q 10 100 0 120 L 0 200 Q 10 220 20 240 L 20 80 Z"
+          fill="${getColorHex(color)}"
+          stroke="#000000"
+          stroke-width="2"
+        />
+        <path
+          d="M 300 80 Q 310 100 320 120 L 320 200 Q 310 220 300 240 L 300 80 Z"
+          fill="${getColorHex(color)}"
+          stroke="#000000"
+          stroke-width="2"
+        />
+        <ellipse
+          cx="160"
+          cy="40"
+          rx="35"
+          ry="20"
+          fill="${color === 'Negro' ? '#1a1a1a' : '#f5f5f5'}"
+          stroke="#000000"
+          stroke-width="1.5"
+          opacity="0.3"
+        />
+      </svg>
+    `;
+    const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
+    return URL.createObjectURL(svgBlob);
+  };
+
+  // Función para actualizar el fondo del canvas con la remera
+  const updateCanvasBackground = (canvas, model, color) => {
+    if (!canvas || !fabricLib) return;
+    
+    const remeraImageUrl = createRemeraSVGImage(model, color);
+    fabricLib.Image.fromURL(remeraImageUrl, (img) => {
+      img.set({
+        selectable: false,
+        evented: false,
+        excludeFromExport: true,
+      });
+      canvas.setBackgroundImage(img, () => {
+        canvas.renderAll();
+      }, {
+        scaleX: canvas.width / 320,
+        scaleY: canvas.height / 400,
+      });
+      
+      setTimeout(() => URL.revokeObjectURL(remeraImageUrl), 100);
+    });
+  };
+
   // Inicializar canvas principal de Fabric.js
   useEffect(() => {
     if (!canvasRef.current || !fabricLib) return;
@@ -58,24 +122,29 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
     const canvas = new fabricLib.Canvas(canvasRef.current, {
       width: 500,
       height: 600,
-      backgroundColor: getColorHex(colorBase),
+      backgroundColor: '#faf8f3', // Fondo beige claro
     });
 
     canvasInstanceRef.current = canvas;
 
-    // Crear forma de remera como fondo no seleccionable
-    const remeraShape = new fabricLib.Path(
-      'M 100 50 L 400 50 L 450 100 L 450 500 L 400 550 L 100 550 L 50 500 L 50 100 Z',
-      {
-        fill: 'transparent',
-        stroke: '#000000',
-        strokeWidth: 2,
+    // Crear imagen SVG de la remera como fondo del canvas
+    const remeraImageUrl = createRemeraSVGImage(selectedModel, colorBase);
+    fabricLib.Image.fromURL(remeraImageUrl, (img) => {
+      img.set({
         selectable: false,
         evented: false,
-      }
-    );
-    canvas.add(remeraShape);
-    canvas.sendToBack(remeraShape);
+        excludeFromExport: true,
+      });
+      canvas.setBackgroundImage(img, () => {
+        canvas.renderAll();
+      }, {
+        scaleX: canvas.width / 320,
+        scaleY: canvas.height / 400,
+      });
+      
+      // Limpiar la URL del objeto después de usar
+      setTimeout(() => URL.revokeObjectURL(remeraImageUrl), 100);
+    });
 
     // Manejar selección de objetos
     canvas.on('selection:created', (e) => {
@@ -107,53 +176,69 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
     return () => {
       canvas.dispose();
     };
-  }, [colorBase, fabricLib, onElementsChange]);
+  }, [colorBase, selectedModel, fabricLib, onElementsChange]);
 
-  // Actualizar preview en tiempo real
+
+  // Inicializar preview canvas
   useEffect(() => {
-    if (!canvasInstanceRef.current || !previewCanvasRef.current || !fabricLib) return;
+    if (!previewCanvasRef.current || !fabricLib) return;
+
+    // Crear preview canvas si no existe
+    if (!previewCanvasInstanceRef.current) {
+      previewCanvasInstanceRef.current = new fabricLib.StaticCanvas(previewCanvasRef.current, {
+        width: 320,
+        height: 400,
+        backgroundColor: '#faf8f3', // Fondo beige claro
+      });
+    }
+  }, [fabricLib]);
+
+  // Actualizar fondo de la remera en el preview solo cuando cambien modelo o color
+  useEffect(() => {
+    if (!previewCanvasInstanceRef.current || !fabricLib) return;
+
+    const previewCanvas = previewCanvasInstanceRef.current;
+    
+    // Actualizar fondo de la remera
+    const previewImageUrl = createRemeraSVGImage(selectedModel, colorBase);
+    fabricLib.Image.fromURL(previewImageUrl, (img) => {
+      img.set({
+        selectable: false,
+        evented: false,
+        excludeFromExport: true,
+      });
+      // Establecer el fondo (reemplaza el anterior automáticamente)
+      previewCanvas.setBackgroundImage(img, () => {
+        previewCanvas.renderAll();
+      }, {
+        scaleX: 1,
+        scaleY: 1,
+      });
+      setTimeout(() => URL.revokeObjectURL(previewImageUrl), 100);
+    });
+  }, [colorBase, selectedModel, fabricLib]);
+
+  // Actualizar preview en tiempo real (solo objetos editables)
+  useEffect(() => {
+    if (!canvasInstanceRef.current || !previewCanvasInstanceRef.current || !fabricLib) return;
 
     const updatePreview = () => {
       const mainCanvas = canvasInstanceRef.current;
-      if (!mainCanvas) return;
-
-      // Crear preview canvas si no existe
-      if (!previewCanvasInstanceRef.current) {
-        previewCanvasInstanceRef.current = new fabricLib.StaticCanvas(previewCanvasRef.current, {
-          width: 320,
-          height: 384,
-          backgroundColor: getColorHex(colorBase),
-        });
-      }
-
       const previewCanvas = previewCanvasInstanceRef.current;
-      previewCanvas.setBackgroundColor(getColorHex(colorBase), () => {
-        previewCanvas.renderAll();
-      });
+      if (!mainCanvas || !previewCanvas) return;
 
       // Copiar objetos al preview (solo los de diseño, no el fondo)
       const objects = mainCanvas.getObjects().filter((obj) => obj.selectable !== false);
-      previewCanvas.clear();
       
-      // Agregar forma de remera al preview
-      const remeraPreview = new fabricLib.Path(
-        'M 50 30 L 270 30 L 300 60 L 300 350 L 270 380 L 50 380 L 20 350 L 20 60 Z',
-        {
-          fill: 'transparent',
-          stroke: '#000000',
-          strokeWidth: 1,
-          selectable: false,
-          evented: false,
-        }
-      );
-      previewCanvas.add(remeraPreview);
-      previewCanvas.sendToBack(remeraPreview);
-
-      // Clonar objetos de diseño
+      // Limpiar solo los objetos editables, no el fondo
+      const objectsToRemove = previewCanvas.getObjects().filter((obj) => obj.selectable !== false);
+      objectsToRemove.forEach((obj) => previewCanvas.remove(obj));
+      
+      // Clonar objetos de diseño del canvas principal al preview
       objects.forEach((obj) => {
         obj.clone((cloned) => {
-          // Escalar para el preview
-          cloned.scale(0.64); // 320/500 = 0.64
+          // Escalar para el preview (320/500 = 0.64)
+          cloned.scale(0.64);
           cloned.set({
             left: cloned.left * 0.64,
             top: cloned.top * 0.64,
@@ -161,7 +246,6 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
           previewCanvas.add(cloned);
         });
       });
-
       previewCanvas.renderAll();
     };
 
@@ -175,7 +259,17 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
     }
 
     updatePreview();
-  }, [colorBase, fabricLib, elementCount]);
+
+    // Limpiar eventos al desmontar
+    return () => {
+      if (canvas) {
+        canvas.off('object:added', updatePreview);
+        canvas.off('object:removed', updatePreview);
+        canvas.off('object:modified', updatePreview);
+        canvas.off('after:render', updatePreview);
+      }
+    };
+  }, [fabricLib, elementCount]);
 
   // Agregar texto al canvas
   const addText = () => {
@@ -192,6 +286,8 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
 
     canvasInstanceRef.current.add(text);
     canvasInstanceRef.current.setActiveObject(text);
+    canvasInstanceRef.current.bringToFront(text);
+    canvasInstanceRef.current.renderAll();
     setTextValue('');
     setSelectedTool('select');
   };
@@ -208,9 +304,13 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
         img.set({
           left: 250,
           top: 300,
+          selectable: true,
+          evented: true,
         });
         canvasInstanceRef.current.add(img);
         canvasInstanceRef.current.setActiveObject(img);
+        canvasInstanceRef.current.bringToFront(img);
+        canvasInstanceRef.current.renderAll();
         setSelectedTool('select');
       });
     };
@@ -226,9 +326,13 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
       img.set({
         left: 250,
         top: 300,
+        selectable: true,
+        evented: true,
       });
       canvasInstanceRef.current.add(img);
       canvasInstanceRef.current.setActiveObject(img);
+      canvasInstanceRef.current.bringToFront(img);
+      canvasInstanceRef.current.renderAll();
       setShowGallery(false);
       setSelectedTool('select');
     }, {
@@ -518,20 +622,26 @@ const EditorDiseño = ({ colorBase, selectedModel, selectedSize, onSave, onBack,
           </div>
 
           {/* Canvas principal */}
-          <div className="mb-6 flex items-center justify-center bg-beige-light/30 border-2 border-black/10 p-4">
-            <canvas ref={canvasRef} className="border-2 border-black shadow-lg" />
+          <div className="mb-6 flex items-center justify-center bg-beige-light/30 border-2 border-black/10 p-4 min-h-[500px]">
+            <canvas 
+              ref={canvasRef} 
+              className="drop-shadow-lg bg-beige-light/30" 
+              style={{ backgroundColor: '#faf8f3' }}
+            />
           </div>
 
           {/* Preview en tiempo real */}
           <div className="mb-6">
             <h3 className="text-sm font-black uppercase tracking-wider mb-3">Preview en Tiempo Real</h3>
-            <div className="flex items-center justify-center bg-beige-light/30 border-2 border-black/10 p-4">
-              <div className="relative">
-                <canvas ref={previewCanvasRef} className="border border-black/20" />
-                <p className="text-center mt-2 text-xs text-black/40 font-bold uppercase tracking-wider">
-                  Vista: {viewSide}
-                </p>
-              </div>
+            <div className="flex flex-col items-center justify-center bg-beige-light/30 border-2 border-black/10 p-4">
+              <canvas 
+                ref={previewCanvasRef} 
+                className="drop-shadow-lg"
+                style={{ backgroundColor: '#faf8f3' }}
+              />
+              <p className="text-center mt-4 text-xs text-black/40 font-bold uppercase tracking-wider w-full">
+                Vista: {viewSide}
+              </p>
             </div>
           </div>
 

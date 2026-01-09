@@ -289,60 +289,60 @@ const Pedido = ({ selectedModel, selectedColor, selectedSize, designData, design
           {/* Vista de la remera */}
           <div className="flex items-center justify-center min-h-[500px] bg-beige-light/30 border-2 border-black/10">
             <div className="relative">
-              {/* Remera plana con SVG */}
-              <svg
-                width="320"
-                height="400"
-                viewBox="0 0 320 400"
-                className="drop-shadow-lg"
-              >
-                {/* Cuerpo de la remera */}
-                <path
-                  d={selectedModel === 'Oversized'
-                    ? 'M 50 40 L 270 40 L 300 80 L 300 360 L 270 380 L 50 380 L 20 360 L 20 80 Z'
-                    : selectedModel === 'Entallada'
-                    ? 'M 60 30 L 260 30 L 290 70 L 290 350 L 260 370 L 60 370 L 30 350 L 30 70 Z'
-                    : 'M 55 35 L 265 35 L 295 75 L 295 355 L 265 375 L 55 375 L 25 355 L 25 75 Z'}
-                  fill={getColorHex(selectedColor)}
-                  stroke="#000000"
-                  strokeWidth="2"
+              {/* Mostrar el preview completo (ya incluye la remera y el diseño) */}
+              {designData?.previewImageUrl ? (
+                <img
+                  src={designData.previewImageUrl}
+                  alt="Diseño de remera"
+                  className="drop-shadow-lg max-w-full h-auto"
+                  style={{ maxHeight: '500px' }}
                 />
-                {/* Manga izquierda */}
-                <path
-                  d="M 20 80 Q 10 100 0 120 L 0 200 Q 10 220 20 240 L 20 80 Z"
-                  fill={getColorHex(selectedColor)}
-                  stroke="#000000"
-                  strokeWidth="2"
-                />
-                {/* Manga derecha */}
-                <path
-                  d="M 300 80 Q 310 100 320 120 L 320 200 Q 310 220 300 240 L 300 80 Z"
-                  fill={getColorHex(selectedColor)}
-                  stroke="#000000"
-                  strokeWidth="2"
-                />
-                {/* Cuello redondo */}
-                <ellipse
-                  cx="160"
-                  cy="40"
-                  rx="35"
-                  ry="20"
-                  fill={selectedColor === 'Negro' ? '#1a1a1a' : '#f5f5f5'}
-                  stroke="#000000"
-                  strokeWidth="1.5"
-                  opacity="0.3"
-                />
-                {/* Diseño */}
-                {designData?.previewImageUrl && (
-                  <foreignObject x="60" y="140" width="200" height="200">
-                    <img
-                      src={designData.previewImageUrl}
-                      alt="Diseño"
-                      className="w-full h-full object-contain"
-                    />
-                  </foreignObject>
-                )}
-              </svg>
+              ) : (
+                /* Fallback: mostrar solo el SVG de la remera si no hay diseño guardado */
+                <svg
+                  width="320"
+                  height="400"
+                  viewBox="0 0 320 400"
+                  className="drop-shadow-lg"
+                >
+                  {/* Cuerpo de la remera */}
+                  <path
+                    d={selectedModel === 'Oversized'
+                      ? 'M 50 40 L 270 40 L 300 80 L 300 360 L 270 380 L 50 380 L 20 360 L 20 80 Z'
+                      : selectedModel === 'Entallada'
+                      ? 'M 60 30 L 260 30 L 290 70 L 290 350 L 260 370 L 60 370 L 30 350 L 30 70 Z'
+                      : 'M 55 35 L 265 35 L 295 75 L 295 355 L 265 375 L 55 375 L 25 355 L 25 75 Z'}
+                    fill={getColorHex(selectedColor)}
+                    stroke="#000000"
+                    strokeWidth="2"
+                  />
+                  {/* Manga izquierda */}
+                  <path
+                    d="M 20 80 Q 10 100 0 120 L 0 200 Q 10 220 20 240 L 20 80 Z"
+                    fill={getColorHex(selectedColor)}
+                    stroke="#000000"
+                    strokeWidth="2"
+                  />
+                  {/* Manga derecha */}
+                  <path
+                    d="M 300 80 Q 310 100 320 120 L 320 200 Q 310 220 300 240 L 300 80 Z"
+                    fill={getColorHex(selectedColor)}
+                    stroke="#000000"
+                    strokeWidth="2"
+                  />
+                  {/* Cuello redondo */}
+                  <ellipse
+                    cx="160"
+                    cy="40"
+                    rx="35"
+                    ry="20"
+                    fill={selectedColor === 'Negro' ? '#1a1a1a' : '#f5f5f5'}
+                    stroke="#000000"
+                    strokeWidth="1.5"
+                    opacity="0.3"
+                  />
+                </svg>
+              )}
               <p className="text-center mt-4 text-sm text-black/40 font-bold uppercase tracking-wider">
                 Vista: {viewSide}
               </p>
