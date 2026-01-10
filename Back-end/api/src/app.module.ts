@@ -45,12 +45,10 @@ import { Shipment } from './shipping/entities/shipment.entity';
       ssl: process.env.DB_SSL === 'true' || (process.env.NODE_ENV === 'production' && !process.env.MYSQLHOST?.includes('railway'))
         ? { rejectUnauthorized: false }
         : false,
-      // Configuraciones adicionales para Railway (timeouts aumentados para conexiones más estables)
+      // Configuraciones adicionales para Railway (opciones válidas para mysql2)
       extra: {
         connectionLimit: 10,
         connectTimeout: 60000,
-        acquireTimeout: 60000,
-        timeout: 60000,
       },
       logging: process.env.NODE_ENV === 'development',
     }),
