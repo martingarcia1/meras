@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: api-meras-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false  # Configurar manualmente en Render Dashboard
+      - key: DB_PORT
+        sync: false  # Configurar manualmente en Render Dashboard
+      - key: DB_USERNAME
+        sync: false  # Configurar manualmente en Render Dashboard
+      - key: DB_PASSWORD
+        sync: false  # Configurar manualmente en Render Dashboard
+      - key: DB_DATABASE
+        sync: false  # Configurar manualmente en Render Dashboard

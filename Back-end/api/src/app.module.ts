@@ -22,11 +22,12 @@ import { Shipment } from './shipping/entities/shipment.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_DATABASE || 'ecommerce_indumentaria',
+      // Soporta variables estándar (DB_*) y variables de Railway (MYSQL*)
+      host: process.env.DB_HOST || process.env.MYSQLHOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306'),
+      username: process.env.DB_USERNAME || process.env.MYSQLUSER || 'root',
+      password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+      database: process.env.DB_DATABASE || process.env.MYSQLDATABASE || 'ecommerce_indumentaria',
       entities: [
         User,
         Address,
