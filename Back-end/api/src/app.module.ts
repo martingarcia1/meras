@@ -41,7 +41,17 @@ import { Shipment } from './shipping/entities/shipment.entity';
         Shipment,
       ],
       synchronize: process.env.NODE_ENV !== 'production', // Solo en desarrollo
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // Desactivar SSL en desarrollo para evitar errores de certificado
+      // Configuración de SSL: Railway TCP proxy no requiere SSL, pero otros servicios pueden requerirlo
+      ssl: process.env.DB_SSL === 'true' || (process.env.NODE_ENV === 'production' && !process.env.MYSQLHOST?.includes('railway'))
+        ? { rejectUnauthorized: false }
+        : false,
+      // Configuraciones adicionales para Railway (timeouts aumentados para conexiones más estables)
+      extra: {
+        connectionLimit: 10,
+        connectTimeout: 60000,
+        acquireTimeout: 60000,
+        timeout: 60000,
+      },
       logging: process.env.NODE_ENV === 'development',
     }),
     AuthModule,

@@ -6,7 +6,7 @@
 - ✅ **MYSQLUSER**: `root`
 - ✅ **MYSQLPASSWORD**: `xOWPowvbqVZPjJOrnwViqMDzemxMOdHj`
 - ✅ **MYSQLDATABASE**: `railway`
-- ❓ **MYSQLPORT**: Necesitas verificar el puerto TCP proxy
+- ✅ **MYSQLPORT**: `52319`
 
 ## 📋 Paso 1: Verificar el Puerto TCP
 
@@ -33,19 +33,19 @@ Una vez que tengas el puerto, configura estas variables en **Render Dashboard**:
 NODE_ENV=production
 PORT=10000
 MYSQLHOST=mysql-production-bb1e.up.railway.app
-MYSQLPORT=[el puerto que obtuviste, probablemente 3306]
+MYSQLPORT=52319
 MYSQLUSER=root
 MYSQLPASSWORD=xOWPowvbqVZPjJOrnwViqMDzemxMOdHj
 MYSQLDATABASE=railway
 ```
 
-### Si el puerto es 3306 (más común):
+### ✅ Configuración Final (Con el puerto correcto):
 
 ```
 NODE_ENV=production
 PORT=10000
 MYSQLHOST=mysql-production-bb1e.up.railway.app
-MYSQLPORT=3306
+MYSQLPORT=52319
 MYSQLUSER=root
 MYSQLPASSWORD=xOWPowvbqVZPjJOrnwViqMDzemxMOdHj
 MYSQLDATABASE=railway
@@ -78,9 +78,9 @@ Si tienes datos en tu base de datos local:
    mysql -h mysql-production-bb1e.up.railway.app -P [PUERTO] -u root -p[MYSQLPASSWORD] railway < backup_XXXXXX.sql
    ```
    
-   Ejemplo (si el puerto es 3306):
+   Ejemplo con tu puerto:
    ```bash
-   mysql -h mysql-production-bb1e.up.railway.app -P 3306 -u root -pxOWPowvbqVZPjJOrnwViqMDzemxMOdHj railway < backup_20241201_120000.sql
+   mysql -h mysql-production-bb1e.up.railway.app -P 52319 -u root -pxOWPowvbqVZPjJOrnwViqMDzemxMOdHj railway < backup_20241201_120000.sql
    ```
 
 ## ✅ Paso 4: Verificar
@@ -118,24 +118,24 @@ Si tienes datos en tu base de datos local:
 - Verifica que `MYSQLDATABASE` sea `railway`
 - Si no existe la base de datos, usa la Opción Rápida para crear las tablas automáticamente
 
-## 📝 Resumen de Variables
+## 📝 Configuración Final - TODAS LAS VARIABLES
 
 ```
 NODE_ENV=production
 PORT=10000
 MYSQLHOST=mysql-production-bb1e.up.railway.app
-MYSQLPORT=[verifica en Railway, probablemente 3306]
+MYSQLPORT=52319
 MYSQLUSER=root
 MYSQLPASSWORD=xOWPowvbqVZPjJOrnwViqMDzemxMOdHj
 MYSQLDATABASE=railway
 ```
 
-## 🎉 ¡Casi Listo!
+## 🎯 Pasos Finales
 
-Solo necesitas:
-1. ✅ Verificar el puerto en Railway
-2. ✅ Configurar las variables en Render
-3. ✅ Deploy
-4. ✅ Crear las tablas
+1. ✅ Configura estas variables en Render Dashboard
+2. ✅ Haz un deploy
+3. ✅ Crea las tablas (ver Paso 3 arriba)
 
-¡Dime cuál es el puerto y te ayudo con el siguiente paso!
+## 🎉 ¡Listo para Configurar!
+
+Copia y pega estas variables exactamente en Render Dashboard → Environment Variables.
